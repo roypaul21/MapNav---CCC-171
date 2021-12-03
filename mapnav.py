@@ -16,7 +16,6 @@ BLACK = (0, 0, 0)  # Shortest Path Finish
 ORANGE = (255, 165, 0)  # Point A
 GREY = (128, 128, 128)
 
-
 class Spot:
     def __init__(self, row, col, width, total_rows):
         self.row = row
@@ -38,7 +37,7 @@ class Spot:
         return self.color == WHITE
 
     def is_barrier(self):
-        return self.color == gray
+        pygame.draw.rect(WIN, gray, (400, 250, 50, 200))
 
     def is_start(self):
         return self.color == ORANGE
@@ -59,7 +58,7 @@ class Spot:
         self.color = WHITE
 
     def make_barrier(self):
-        self.color = gray
+        pygame.draw.rect(WIN, gray, (400, 250, 50, 200))
 
     def make_end(self):
         self.color = BLUE
@@ -69,6 +68,7 @@ class Spot:
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
+
 
     def update_neighbors(self, grid):
         self.neighbors = []
@@ -157,25 +157,29 @@ def make_grid(rows, width):
             grid[i].append(spot)
 
     return grid
-'''
+
+
 def draw_grid(win, rows, width):
     gap = width // rows
     for i in range(rows):
         pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
         for j in range(rows):
             pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
-'''
+
+def draw_map(win, rows, width):
+    pygame.draw.rect(win, gray, (400, 250, 50, 200))
 
 def draw(win, grid, rows, width):
     win.fill(WHITE)
-
     for row in grid:
         for spot in row:
             spot.draw(win)
 
-    #draw_grid(win, rows, width)
-    pygame.display.update()
+   # draw_grid(win, rows, width)
 
+    #draw_map(win, rows, width)
+
+    pygame.display.update()
 
 def get_clicked_pos(pos, rows, width):
     gap = width // rows
@@ -188,6 +192,7 @@ def get_clicked_pos(pos, rows, width):
 
 
 def main(win, width):
+
 
     ROWS = 50
     grid = make_grid(ROWS, width)
