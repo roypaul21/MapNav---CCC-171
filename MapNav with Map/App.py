@@ -2,10 +2,11 @@ import pygame
 from AStarSearch import *
 from Settings import *
 from Grid import Grid
+import pygame as pg
+pg.init()
 
 class App:
     def __init__(self):
-
         self.start = None
         self.goal = None
         self.ready = False
@@ -20,6 +21,12 @@ class App:
         pygame.display.set_caption("Simple AI MapNav")
         # Used to manage how fast the screen updates
         self.clock = pygame.time.Clock()
+
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        text = font.render('MapNav', True, BLUE, BLACK)
+        textRect = text.get_rect()
+        textRect.center = (200, 630)
+        self.screen.blit(text, textRect)
 
     def run(self):
         # Loop until the user clicks the close button.
@@ -50,6 +57,15 @@ class App:
                         self.grid.set_obstacle(cell)
             # Set the screen background
             self.screen.fill(BLACK)
+
+            font = pygame.font.Font('freesansbold.ttf', 32)
+            text = font.render('MapNav', True, BLUE, BLACK)
+            textRect = text.get_rect()
+            textRect.center = (650,630)
+            self.screen.blit(text, textRect)
+
+
+
             self.button("Clear", (self.window_size[0] - 300) / 2, self.window_size[1] - 100,
                         100, 50, GREY, WHITE, self.clean)
             self.button("Map", (self.window_size[0] + 100) / 2, self.window_size[1] - 100,
@@ -66,16 +82,26 @@ class App:
         pygame.quit()
         quit()
 
+
     def draw_maze(self):
+
         self.clean()
         for i in range(ROW_NUM):
             self.grid.set_obstacle((i, 0))
             self.grid.set_obstacle((i, COL_NUM - 13))
 
+            for j in range(5):
+                for n in range(16):
+                    self.grid.set_cass((1 + j, 20 + n))
 
+            for j in range(6):
+                for n in range(14):
+                    self.grid.set_ced((10 + j, 1 + n))
 
-            if i < 25:
-               self.grid.set_obstacle((i, 35))
+            for j in range(4):
+                for n in range(16):
+                    self.grid.set_con((1 + j, 50 + n))
+
             if i < 5:
                self.grid.set_obstacle((i, 40))
 
@@ -95,7 +121,7 @@ class App:
 
             for j in range(5):
                 for n in range(3):
-                    self.grid.set_obstacle((25 + j, 88 + n))
+                    self.grid.set_building((25 + j, 88 + n))
 
             for j in range(2):
                 for n in range(16):
@@ -108,12 +134,16 @@ class App:
 
             for j in range(7):
                 for n in range(12):
-                    self.grid.set_obstacle((8 + j, 95 + n))
+                    self.grid.set_building((8 + j, 95 + n))
 
             #CON
             for j in range(5):
-                for n in range(47):
+                for n in range(10):
                     self.grid.set_obstacle((0 + j, 40 + n))
+
+            for j in range(5):
+                for n in range(22):
+                    self.grid.set_obstacle((0 + j, 65 + n))
 
             for j in range(3):
                 for n in range(4):
@@ -145,11 +175,12 @@ class App:
             for j in x:
                 self.grid.set_obstacle((34 + j, 35))
 
+            #admin building
             x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14]
             y = [1, 2, 3, 4,5,6]
             for j in x:
                 for n in y:
-                    self.grid.set_obstacle((32 + j, n))
+                    self.grid.set_building((32 + j, n))
 
         for i in range(COL_NUM):
             self.grid.set_obstacle((0, i))
@@ -157,16 +188,32 @@ class App:
 
             for j in range(5):
                 for n in range(13):
-                    self.grid.set_obstacle((26+j, 8+ n))
+                    self.grid.set_building((26+j, 8+ n))
 
 
-            for j in range(5):
-                for n in range(36):
-                    self.grid.set_obstacle((20 + j, n))
+            for j in range(9):
+                for n in range(32):
+                    self.grid.set_obstacle((16 + j,4+ n))
+
+            for j in range(9):
+                for n in range(21):
+                    self.grid.set_obstacle((1 + j, n))
+
+            for j in range(7):
+                for n in range(21):
+                    self.grid.set_obstacle((6 + j,15 + n))
+
+            for j in range(2):
+                for n in range(21):
+                    self.grid.set_obstacle((14 + j,15 + n))
+
+            for j in range(9):
+                for n in range(3):
+                    self.grid.set_obstacle((16 + j, n))
 
             for j in range(5):
                 for n in range(14):
-                    self.grid.set_obstacle((26 + j,22+ n))
+                    self.grid.set_building((26 + j,22+ n))
 
             if i < 36:
                 self.grid.set_obstacle((ROW_NUM - 3, i))
@@ -181,36 +228,61 @@ class App:
             for j in x:
                 self.grid.set_obstacle((ROW_NUM - 17, 21 + j))
 
-            #Med to CCS Building
+
             for j in range(50):
                 for n in range(10):
                     self.grid.set_obstacle((ROW_NUM - 23 + n, 38 + j))
 
+            #med Building
+            for j in range(7):
+                for n in range(5):
+                    self.grid.set_med((ROW_NUM - 23 + n, 38 + j))
+
+            for j in range(7):
+                for n in range(5):
+                    self.grid.set_building((ROW_NUM - 10 + n, 38 + j))
+
+            for j in range(5):
+                for n in range(4):
+                    self.grid.set_building((ROW_NUM -16   + n, 38 + j))
+
+
+            for j in range(12):
+                for n in range(7):
+                    self.grid.set_micel((ROW_NUM - 23 + n, 48 + j))
+
+            #css
+            for j in range(15):
+                for n in range(8):
+                    self.grid.set_ccs((ROW_NUM - 23 + n, 66 + j))
+
+
+
             #CSM Builing
             for j in range(30):
                 for n in range(10):
-                    self.grid.set_obstacle((ROW_NUM - 35 + n, 38 + j))
+                    self.grid.set_building((ROW_NUM - 35 + n, 38 + j))
 
             for j in range(4):
                 for n in range(10):
-                    self.grid.set_obstacle((ROW_NUM - 35 + n, 69 + j))
+                    self.grid.set_con((ROW_NUM - 35 + n, 69 + j))
 
             for j in range(17):
                 for n in range(10):
-                    self.grid.set_obstacle((ROW_NUM - 35 + n, 74 + j))
+                    self.grid.set_csm((ROW_NUM - 35 + n, 74 + j))
 
             #CBAA to COET Building
             for j in range(7):
                 for n in range(13):
-                    self.grid.set_obstacle((6+j, 40+ n))
+                    self.grid.set_cbaa((6+j, 40+ n))
 
             for j in range(7):
                 for n in range(14):
-                    self.grid.set_obstacle((6 + j, 54 + n))
+                    self.grid.set_cbaa((6 + j, 54 + n))
 
             for j in range(7):
                 for n in range(15):
-                    self.grid.set_obstacle((6 + j, 72 + n))
+                    self.grid.set_coet  ((6 + j, 72 + n))
 
 
 
