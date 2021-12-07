@@ -220,6 +220,7 @@ class App:
         row = pos[1] // (CELL_HEIGHT + MARGIN)
         return row, col
 
+
     def draw_graph(self, speed):
         # Draw the grid
         for row in range(ROW_NUM):
