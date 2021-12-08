@@ -37,5 +37,5 @@ CELL_HEIGHT = 12
 MARGIN = 0
 
 # Speed of the screen refreshing
-FAST = 60
+FAST = 50
 SLOW = 10

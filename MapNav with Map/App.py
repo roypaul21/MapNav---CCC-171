@@ -1,9 +1,12 @@
 import pygame
+import pickle
+import csv
+import codecs
+from tkinter import *
 from AStarSearch import *
 from Settings import *
 from Grid import Grid
-import pygame as pg
-pg.init()
+
 
 class App:
     def __init__(self):
@@ -36,21 +39,23 @@ class App:
             for event in pygame.event.get():  # User did something
                 if event.type == pygame.QUIT:  # If user clicked close
                     done = True  # Flag that we are done so we exit this loop
+
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.ready = True
+
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT\
                         and self.get_cell(pygame.mouse.get_pos())[0] < ROW_NUM\
                         and self.get_cell(pygame.mouse.get_pos())[1] < COL_NUM:
                     if not self.start:
                         cell = self.get_cell(pygame.mouse.get_pos())
                         if not self.grid.is_obstacle(cell):
-                            self.start = cell
-                            self.grid.set_color(self.start, RED)
+                            self.start = (cell)
+                            self.grid.set_color(self.start, GREEN)
                     elif not self.goal:
                         cell = self.get_cell(pygame.mouse.get_pos())
                         if not self.grid.is_obstacle(cell):
                             self.goal = cell
-                            self.grid.set_color(self.goal, GREEN)
+                            self.grid.set_color(self.goal, RED)
                     elif not self.ready:
                         cell = self.get_cell(pygame.mouse.get_pos())
                         self.grid.set_color(cell, BLACK)
@@ -66,30 +71,121 @@ class App:
 
 
 
-            self.button("Clear", (self.window_size[0] - 300) / 2, self.window_size[1] - 100,
+            self.button("Clear", (self.window_size[0] - 400) / 2, self.window_size[1] - 100,
                         100, 50, GREY, WHITE, self.clean)
-            self.button("Map", (self.window_size[0] + 100) / 2, self.window_size[1] - 100,
+            self.button("Map", (self.window_size[0] + 200) / 2, self.window_size[1] - 100,
                         100, 50, GREY, WHITE, self.draw_maze)
+
+
+
             # if obstacle, goal and starting point all set, find the shortest path through a* search
             if self.ready and not self.searched:
                 self.path = a_star_search_visualize(self, self.grid, self.start, self.goal)
                 self.searched = True
+
             for item in self.path:
                 if item != self.start and item != self.goal:
                     self.grid.set_color(item, BLACK)
             self.draw_graph(FAST)
 
+
         pygame.quit()
         quit()
 
-
     def draw_maze(self):
+
+        window = Tk()
+        window.title("MapNav")
+        window.geometry(f'{400}x{150}+{460}+{280}')
+        window.resizable(False, False)
+        window.configure(background="white")
+
+        def submit():
+            from_where = variable.get()
+            to_where = variable2.get()
+
+            save_data = [from_where,to_where]
+            pickle.dump(save_data, open("destination.dat", "wb"))
+
+            window.destroy()
+
+        destination = ["Select From","Entrance","EXIT","Administration","GYM","Clinic","CCS","CSM","COET",
+                        "CON","CBAA","CASS","IDS","Complex","Libray","DHS","MICel","KASAMA"]
+        variable = StringVar()
+        variable.set(destination[0])
+
+        destination2 = ["Select To","Entrance","EXIT","Administration","GYM","Clinic","CCS","CSM","COET",
+                        "CON","CBAA","CASS","IDS","Complex","Libray","DHS","MICel","KASAMA"]
+        variable2 = StringVar()
+        variable2.set(destination2[0])
+
+        Label(window, text="Choose Destination", bg="white", fg="black", font=("none 13 bold")) .place(x=120,y=20)
+
+        Label(window, text="FROM:", bg="white", fg='GREEN', font=("none 11 bold")).place(x=55, y=50)
+        Label(window, text="TO:", bg="white", fg='RED', font=("none 11 bold")).place(x=250, y=50)
+
+        from_1= OptionMenu(window, variable, *destination)
+        from_1.place(x=55,y=70)
+        to_1 = OptionMenu(window, variable2, *destination2)
+        to_1.place(x=250, y=70)
+        Button(window, text="Submit", width=8, command=submit) .place(x=163,y=110)
+        window.mainloop()
+
+        dis = pickle.load(open("destination.dat", "rb"))
+        from_where = dis[0]
+        to_where = dis[1]
+
+
+
+        with open('coordinates.csv') as f:
+            reader = csv.DictReader(f, delimiter=',')
+
+            for row in reader:
+                name = row['Name']
+                coor_x = row['x_coor']
+                coor_y = row['y_coor']
+
+
 
         self.clean()
         for i in range(ROW_NUM):
-            self.grid.set_obstacle((i, 0))
-            self.grid.set_obstacle((i, COL_NUM - 13))
 
+            with open('coordinates.csv') as f:
+                reader = csv.DictReader(f, delimiter=',')
+
+                for row in reader:
+                    name = row['Name']
+                    coor_x = row['x_coor']
+                    coor_y = row['y_coor']
+
+                    if from_where in name:
+                        from_x = int(coor_x)
+                        from_y = int(coor_y)
+
+                        # print(name)
+
+                        # From Where
+                        self.start = (from_x, from_y)
+                        self.grid.set_color(self.start, GREEN)
+
+                    if to_where in name:
+                        to_x = int(coor_x)
+                        to_y = int(coor_y)
+                        print(to_x)
+                        print(to_y)
+                        print(name)
+
+                        # Where to
+                        self.goal = (to_x, to_y)
+                        self.grid.set_color(self.goal, RED)
+
+                        self.grid.set_obstacle((i, 0))
+                        self.grid.set_obstacle((i, COL_NUM - 1))
+
+
+
+            self.grid.set_obstacle((i, 0))
+            self.grid.set_obstacle((i, COL_NUM - 1))
             for j in range(5):
                 for n in range(16):
                     self.grid.set_cass((1 + j, 20 + n))
