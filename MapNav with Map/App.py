@@ -1,11 +1,11 @@
 import pygame
 import pickle
 import csv
-import codecs
 from tkinter import *
 from AStarSearch import *
 from Settings import *
 from Grid import Grid
+
 
 
 class App:
@@ -43,6 +43,7 @@ class App:
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.ready = True
 
+
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT\
                         and self.get_cell(pygame.mouse.get_pos())[0] < ROW_NUM\
                         and self.get_cell(pygame.mouse.get_pos())[1] < COL_NUM:
@@ -64,19 +65,18 @@ class App:
             self.screen.fill(BLACK)
 
             font = pygame.font.Font('freesansbold.ttf', 32)
-            text = font.render('MapNav', True, BLUE, BLACK)
+            text = font.render('Simple MapNav', True, BLUE, BLACK)
             textRect = text.get_rect()
             textRect.center = (650,630)
             self.screen.blit(text, textRect)
-
-
 
             self.button("Clear", (self.window_size[0] - 400) / 2, self.window_size[1] - 100,
                         100, 50, GREY, WHITE, self.clean)
             self.button("Map", (self.window_size[0] + 200) / 2, self.window_size[1] - 100,
                         100, 50, GREY, WHITE, self.draw_maze)
 
-
+            self.button("Distance", (self.window_size[0] - 120) / 2, self.window_size[1] - 100,
+                        120, 50, GREY, WHITE, self.distance_path)
 
             # if obstacle, goal and starting point all set, find the shortest path through a* search
             if self.ready and not self.searched:
@@ -88,9 +88,31 @@ class App:
                     self.grid.set_color(item, BLACK)
             self.draw_graph(FAST)
 
-
         pygame.quit()
         quit()
+
+    def distance_path(self):
+
+        window = Tk()
+        window.title("MapNav")
+        window.geometry(f'{550}x{100}+{700}+{466}')
+        window.resizable(False, False)
+        count_path = pickle.load(open("PathCount.dat", "rb"))
+        dis = pickle.load(open("destination.dat", "rb"))
+        window.overrideredirect(True)
+        print(count_path)
+        print(dis)
+
+        def exit():
+            window.destroy()
+
+        Label(window, text=str(count_path) + " Meters From " + str(dis[0]) + " To " + str(dis[1]), bg="white", fg="black", font=("none 16 bold")).place(x=0, y=0)
+        Button(window, text="OK", width=8, bg="light gray", command=exit).place(x=100, y=50)
+
+
+        window.configure(background="white")
+
+        window.mainloop()
 
     def draw_maze(self):
 
@@ -108,6 +130,8 @@ class App:
             pickle.dump(save_data, open("destination.dat", "wb"))
 
             window.destroy()
+
+
 
         destination = ["Select From","Entrance","EXIT","Administration","GYM","Clinic","CCS","CSM","COET",
                         "CON","CBAA","CASS","IDS","Complex","Libray","DHS","MICel","KASAMA"]
@@ -129,22 +153,13 @@ class App:
         to_1 = OptionMenu(window, variable2, *destination2)
         to_1.place(x=250, y=70)
         Button(window, text="Submit", width=8, command=submit) .place(x=163,y=110)
+
         window.mainloop()
 
         dis = pickle.load(open("destination.dat", "rb"))
+
         from_where = dis[0]
         to_where = dis[1]
-
-
-
-        with open('coordinates.csv') as f:
-            reader = csv.DictReader(f, delimiter=',')
-
-            for row in reader:
-                name = row['Name']
-                coor_x = row['x_coor']
-                coor_y = row['y_coor']
-
 
 
         self.clean()
@@ -161,19 +176,12 @@ class App:
                     if from_where in name:
                         from_x = int(coor_x)
                         from_y = int(coor_y)
-
-                        # print(name)
-
-                        # From Where
                         self.start = (from_x, from_y)
                         self.grid.set_color(self.start, GREEN)
 
                     if to_where in name:
                         to_x = int(coor_x)
                         to_y = int(coor_y)
-                        print(to_x)
-                        print(to_y)
-                        print(name)
 
                         # Where to
                         self.goal = (to_x, to_y)
@@ -185,7 +193,8 @@ class App:
 
 
             self.grid.set_obstacle((i, 0))
-            self.grid.set_obstacle((i, COL_NUM - 1))
+
+            self.grid.set_obstacle((i, COL_NUM - 13))
             for j in range(5):
                 for n in range(16):
                     self.grid.set_cass((1 + j, 20 + n))
@@ -426,6 +435,7 @@ class App:
         text_surface = font.render(text, True, BLACK)
         return text_surface, text_surface.get_rect()
 
+
     def clean(self):
         self.searched = False
         self.start = None
@@ -449,6 +459,8 @@ class App:
         text_surf, text_rect = self.text_objects(msg, small_text)
         text_rect.center = ((x + (w / 2)), (y + (h / 2)))
         self.screen.blit(text_surf, text_rect)
+
+
 
 
 if __name__ == "__main__":

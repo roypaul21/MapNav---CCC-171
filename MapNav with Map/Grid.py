@@ -138,7 +138,8 @@ class Grid:
         return neighbours
 
     def distance(self, x, y):
-        return math.sqrt((x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2)
+        dis_count = math.sqrt((x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2)
+        return dis_count
 
     def recursive_maze_generation(self, row_start, row_end, col_start, col_end):
         if row_start + 4 > row_end or col_start + 4 > col_end:
@@ -171,6 +172,6 @@ class Grid:
 
 if __name__ == "__main__":
     grid = Grid(10, 10)
-    print(grid)
+    #print(grid)
     grid.set_obstacle((1, 1))
-    print(grid.neighbours((0, 0)))
+    #print(grid.neighbours((0, 0)))

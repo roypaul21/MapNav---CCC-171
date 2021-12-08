@@ -1,6 +1,8 @@
 from PriorityQueue import PriorityQueue
 from Settings import *
 import random
+import pickle
+from tkinter import *
 
 
 def heuristic(x, y):
@@ -12,6 +14,15 @@ def reconstruct_path(came_from, current):
     while current in came_from:
         current = came_from[current]
         total_path.insert(0, current)
+
+    for path_count, item in enumerate(total_path):
+
+        meter = 2
+        meter_path = path_count * meter
+
+        pickle.dump(meter_path, open("PathCount.dat", "wb"))
+
+
     return total_path
 
 
@@ -72,3 +83,6 @@ def a_star_search_visualize(app, grid, start, goal):
             app.grid.set_color(current, light_gray)
         app.draw_graph(FAST)
     return []
+
+
+
