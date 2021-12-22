@@ -10,6 +10,62 @@ class Grid:
         self.grid = [[0 for _ in range(width)] for __ in range(height)]
         self.grid_color = [[WHITE for _ in range(width)] for __ in range(height)]
 
+    def set_cass(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, dark_green)
+
+    def set_ced(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, pink)
+
+
+    def set_med(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, med_red)
+
+    def set_micel(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, brown_red)
+
+    def set_csm(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, dark_red)
+
+    def set_building(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, building)
+
+    def set_coet(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, light_red)
+
+    def set_cbaa(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, light_yellow)
+
+
+    def set_con(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, light_green)
+
     def set_ccs(self, cell):
         row = cell[0]
         col = cell[1]
@@ -21,6 +77,12 @@ class Grid:
         col = cell[1]
         self.grid[row][col] = 1
         self.set_color(cell, GRAY)
+
+    def set_lab(self, cell):
+        row = cell[0]
+        col = cell[1]
+        self.grid[row][col] = 1
+        self.set_color(cell, GREEN)
 
     def set_color(self, cell, color):
         row = cell[0]
@@ -76,7 +138,8 @@ class Grid:
         return neighbours
 
     def distance(self, x, y):
-        return math.sqrt((x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2)
+        dis_count = math.sqrt((x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2)
+        return dis_count
 
     def recursive_maze_generation(self, row_start, row_end, col_start, col_end):
         if row_start + 4 > row_end or col_start + 4 > col_end:
@@ -109,6 +172,6 @@ class Grid:
 
 if __name__ == "__main__":
     grid = Grid(10, 10)
-    print(grid)
+    #print(grid)
     grid.set_obstacle((1, 1))
-    print(grid.neighbours((0, 0)))
+    #print(grid.neighbours((0, 0)))

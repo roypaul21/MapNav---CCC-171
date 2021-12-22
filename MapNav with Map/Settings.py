@@ -3,7 +3,16 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+dark_green = (69,139,116)
+light_green = (27,255,212)
 SKY_BLUE = (102, 204, 255)
+light_red =(205,51,51)
+light_yellow=(255,211,155)
+building = (139,125,107)
+dark_red = (138,51,36)
+med_red = (255,64,64)
+pink = (238,121,159)
+brown_red=(238,59,59)
 BLUE = (0, 100, 230)
 GREY = (204, 204, 204)
 LEFT = 1
@@ -28,5 +37,5 @@ CELL_HEIGHT = 12
 MARGIN = 0
 
 # Speed of the screen refreshing
-FAST = 60
+FAST = 50
 SLOW = 10
